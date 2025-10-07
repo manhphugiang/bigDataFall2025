@@ -10,6 +10,9 @@ import java.io.IOException;
 public class ElectricMapper extends Mapper<LongWritable, Text, Text, FloatWritable> {
     @Override
     protected void map(LongWritable key, Text value, Mapper.Context context) throws IOException, InterruptedException {
+        if (key.get() == 0 && value.toString().contains("LOG_ID")) {
+            return;
+        }
         String[] values = value.toString().split("\\t");
         String houseId_condate;
         float energy_reading;

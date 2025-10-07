@@ -34,6 +34,7 @@ public class ElectricReducer extends Reducer<Text, FloatWritable, Text, FloatWri
 
         String keyStr = key.toString();  // house and date - 1/2012-06-01
         String[] parts = keyStr.split("/");
+        if (parts.length < 2) return;
 
         String houseId = parts[0];       // "1"
         String date = parts[1];          // "2012-06-01"
