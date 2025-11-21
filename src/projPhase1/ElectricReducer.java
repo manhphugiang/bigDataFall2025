@@ -1,14 +1,13 @@
 package projPhase1;
 
-import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 import java.io.IOException;
 
-public class ElectricReducer extends Reducer<Text, FloatWritable, Text, FloatWritable> {
-    private MultipleOutputs<Text, FloatWritable> dateOutput;
+public class ElectricReducer extends Reducer<Text, Text, Text, Text> {
+    private MultipleOutputs<Text, Text> dateOutput;
 
     @Override
     protected void setup(Context context) {
@@ -16,22 +15,7 @@ public class ElectricReducer extends Reducer<Text, FloatWritable, Text, FloatWri
     }
 
     @Override
-    protected void reduce(Text key, Iterable<FloatWritable> readings, Context context) throws IOException, InterruptedException {
-        float first = 0;
-        float second = 0;
-        int count = 0;
-        for (FloatWritable reading : readings) {
-            if (count == 0) {
-                first = reading.get();
-                count++;
-            } else if (count == 1) {
-                second = reading.get();
-                break;
-            }
-        }
-        float consumption = first - second; // calculate the energy consumption
-
-
+    protected void reduce(Text key, Iterable<Text> records, Context context) throws IOException, InterruptedException {
         String keyStr = key.toString();  // house and date - 1/2012-06-01
         String[] parts = keyStr.split("/");
         if (parts.length < 2) return;
@@ -41,7 +25,10 @@ public class ElectricReducer extends Reducer<Text, FloatWritable, Text, FloatWri
         String datePath = date.replace("-", "/");  // "2012/06/01" - change the date format
         String fileName = "datafile_" + date.replace("-", "_");
 
-        dateOutput.write(key, new FloatWritable(consumption), datePath + "/" + fileName);
+        // write all complete records to date-organized structure
+        for (Text record : records) {
+            dateOutput.write(key, record, datePath + "/" + fileName);
+        }
         // time series directory structure ///Dataset/YYYY/MM/DD/datafile_YYYY_MM_DD.txt
     }
 

@@ -1,5 +1,5 @@
-package projPhase1;
-
+package projPhase2;
+import org.apache.hadoop.io.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -7,32 +7,33 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-public class ReduceJob {
+// Main Job Class
+public class RunMapReduceJob {
     public static void main(String[] args) throws Exception {
-        new ReduceJob().run(args);
+        new RunMapReduceJob().run(args);
     }
 
     public void run(String[] args) throws Exception {
         Path inPath = new Path(args[0]);
         Path outPath = new Path(args[1]);
-        System.out.println(inPath.toString());
-        System.out.println(outPath.toString());
+
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf);
-        job.setJarByClass(ReduceJob.class);
-        job.setJobName("Map and Reduce Job and Save Data To HDFS time series file structure");
 
-        job.setMapperClass(ElectricMapper.class);
-        job.setReducerClass(ElectricReducer.class);
-
+        job.setJarByClass(RunMapReduceJob.class);
+        job.setJobName("Task 1: Consumption Data Loader to Phase 1 Structure");
+        job.setMapperClass(dataMapper.class);
+        job.setReducerClass(dataReducer.class);
         job.setNumReduceTasks(4);
 
         FileInputFormat.addInputPath(job, inPath);
         FileOutputFormat.setOutputPath(job, outPath);
 
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(Text.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        System.exit(job.waitForCompletion(true) ? 1 : 0);
     }
 }
