@@ -1,0 +1,108 @@
+dev:
+ssh hadoopuser@10.31.154.101 -p 2221
+
+prod:
+ssh hadoopuser@10.31.154.215 -p 2221
+ 
+
+Sher1dan
+
+hadoop fs -copyFromLocal /home/hadoopuser/midterm/Customer1921.csv /q1
+hadoop fs -cat /products/prod1/Weather_WYJ.txt
+
+
+hadoop jar  /home/hadoopuser/midterm/jarQuestion2/HadoopProj.jar hdfs://192.168.56.5:9820/v2product.csv  hdfs://192.168.56.5:9820/manhphugiang/outputQuestion2
+
+
+2025-10-02 18:08:46,638 INFO mapreduce.Job: Job job_1757537865109_0002 completed successfully
+2025-10-02 18:08:48,291 INFO mapreduce.Job: Counters: 55
+        File System Counters
+                FILE: Number of bytes read=325866
+                FILE: Number of bytes written=4607685
+                FILE: Number of read operations=0
+                FILE: Number of large read operations=0
+                FILE: Number of write operations=0
+                HDFS: Number of bytes read=1695334
+                HDFS: Number of bytes written=156
+                HDFS: Number of read operations=53
+                HDFS: Number of large read operations=0
+                HDFS: Number of write operations=8
+                HDFS: Number of bytes read erasure-coded=0
+        Job Counters
+                Killed map tasks=2
+                Launched map tasks=12
+                Launched reduce tasks=4
+                Data-local map tasks=12
+                Total time spent by all maps in occupied slots (ms)=907247
+                Total time spent by all reduces in occupied slots (ms)=461428
+                Total time spent by all map tasks (ms)=907247
+                Total time spent by all reduce tasks (ms)=461428
+                Total vcore-milliseconds taken by all map tasks=907247
+                Total vcore-milliseconds taken by all reduce tasks=461428
+                Total megabyte-milliseconds taken by all map tasks=929020928
+                Total megabyte-milliseconds taken by all reduce tasks=472502272
+        Map-Reduce Framework
+                Map input records=29622
+                Map output records=29622
+                Map output bytes=266598
+                Map output materialized bytes=326106
+                Input split bytes=1331
+                Combine input records=0
+                Combine output records=0
+                Reduce input groups=11
+                Reduce shuffle bytes=326106
+                Reduce input records=29622
+                Reduce output records=11
+                Spilled Records=59244
+                Shuffled Maps =44
+                Failed Shuffles=0
+                Merged Map outputs=44
+                GC time elapsed (ms)=26383
+                CPU time spent (ms)=61750
+                Physical memory (bytes) snapshot=3267506176
+                Virtual memory (bytes) snapshot=38269534208
+                Total committed heap usage (bytes)=2035810304
+                Peak Map Physical memory (bytes)=257826816
+                Peak Map Virtual memory (bytes)=2556809216
+                Peak Reduce Physical memory (bytes)=187461632
+                Peak Reduce Virtual memory (bytes)=2557038592
+        Shuffle Errors
+                BAD_ID=0
+                CONNECTION=0
+                IO_ERROR=0
+                WRONG_LENGTH=0
+                WRONG_MAP=0
+                WRONG_REDUCE=0
+        File Input Format Counters
+                Bytes Read=1694003
+        File Output Format Counters
+                Bytes Written=156
+hadoopuser@hd-master:~/upload-example$
+
+
+
+
+                Bytes Written=156
+hadoopuser@hd-master:~/upload-example$ hadoop fs -ls /output
+Found 5 items
+-rw-r--r--   3 hadoopuser supergroup          0 2025-10-02 18:08 /output/_SUCCESS
+-rw-r--r--   3 hadoopuser supergroup         28 2025-10-02 18:08 /output/part-r-00000
+-rw-r--r--   3 hadoopuser supergroup         53 2025-10-02 18:08 /output/part-r-00001
+-rw-r--r--   3 hadoopuser supergroup         30 2025-10-02 18:08 /output/part-r-00002
+-rw-r--r--   3 hadoopuser supergroup         45 2025-10-02 18:08 /output/part-r-00003
+hadoopuser@hd-master:~/upload-example$ hadoop fs -cat /output/part-r-00000
+2012    7090.182
+2016    9029.466
+hadoopuser@hd-master:~/upload-example$ hadoop fs -cat /output/part-r-00001
+2013    9833.747
+2017    13133.833
+2020    1967.5032
+9999    0.0
+hadoopuser@hd-master:~/upload-example$ hadoop fs -cat /output/part-r-00002
+2014    9212.945
+2018    10612.4375
+hadoopuser@hd-master:~/upload-example$ hadoop fs -cat /output/part-r-00003
+2011    7414.2803
+2015    10230.743
+2019    11459.337
+hadoopuser@hd-master:~/upload-example$
