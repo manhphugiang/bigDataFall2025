@@ -6,32 +6,37 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import java.io.IOException;
 
-
 public class HourlyMapper extends Mapper<LongWritable, Text, Text, FloatWritable> {
+
     @Override
-    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+    protected void map(LongWritable key, Text value, Context context)
+            throws IOException, InterruptedException {
 
-        if (key.get() == 0 && value.toString().contains("LOG_ID")) return;
+        if (value == null) return;
+        
+        String line = value.toString();
+        if (line == null || line.trim().isEmpty()) return;
 
-        String[] values = value.toString().split("\\t");
+        String[] fields = line.split("\\t");
+        if (fields == null || fields.length < 7) return;
 
         try {
-            String houseId = values[1];
-            String date = values[2];
-            String time = values[3]; // e.g., 00:00:10
-            String readingStr = values[4];
+            String house = fields[2];
+            String date = fields[3];
+            String time = fields[4];
+            String readingStr = fields[5];
 
-            // extract just the Hour (00 to 23)
-            String hour = time.split(":")[0];
+            if (house == null || date == null || time == null || readingStr == null) return;
+            if (time.length() < 2) return;
 
-            // key: HouseID_Date_Hour (e.g., 1_2015-05-30_09)
-            String mapKey = houseId + "_" + date + "_" + hour;
-            float energy = Float.parseFloat(readingStr);
+            float reading = Float.parseFloat(readingStr);
+            String hour = time.substring(0, 2);
+            String keyOut = house + "/" + date + "/" + hour;
 
-            context.write(new Text(mapKey), new FloatWritable(energy));
-
+            context.write(new Text(keyOut), new FloatWritable(reading));
         } catch (Exception e) {
-            // ignore exception
+            // skip
         }
     }
 }
+

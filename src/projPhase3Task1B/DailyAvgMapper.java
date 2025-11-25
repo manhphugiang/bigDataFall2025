@@ -3,32 +3,34 @@ package projPhase3Task1B;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-
 import java.io.IOException;
 
 public class DailyAvgMapper extends Mapper<LongWritable, Text, Text, Text> {
+    
     @Override
-    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+    protected void map(LongWritable key, Text value, Context context) 
+            throws IOException, InterruptedException {
 
-        // 1. Skip Header
-        if (key.get() == 0 && value.toString().contains("LOG_ID")) return;
+        if (value == null) return;
+        
+        String line = value.toString();
+        if (line == null || line.trim().isEmpty()) return;
 
-        // 2. Split CSV
-        String[] values = value.toString().split("\\t");
+        String[] fields = line.split("\\t");
+        if (fields == null || fields.length < 7) return;
 
         try {
-            // Indexes based on PDF: Log_ID(0), House_ID(1), ConDate(2), ConTime(3), Reading(4)
-            String houseId = values[1];
-            String date = values[2];
-            String readingStr = values[4];
+            String house = fields[2];
+            String date = fields[3];
+            String readingStr = fields[5];
 
-            // 3. Output Key: HouseID
-            // 4. Output Value: Date + "," + Reading
-            // We need the date in the value to group readings by day in the Reducer
-            context.write(new Text(houseId), new Text(date + "," + readingStr));
+            if (house == null || date == null || readingStr == null) return;
 
+            float reading = Float.parseFloat(readingStr);
+            
+            context.write(new Text(house), new Text(date + "," + reading));
         } catch (Exception e) {
-            // Handle bad records
+            // skip
         }
     }
 }

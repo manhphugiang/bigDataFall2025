@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: projPhase3Task1A.HourlyRunMapReduceJob
+Main-Class: projPhase3Task1B.DailyAvgRunMapReduceJob
 
