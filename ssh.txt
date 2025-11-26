@@ -10,6 +10,8 @@ Sher1dan
 hadoop fs -copyFromLocal /home/hadoopuser/midterm/Customer1921.csv /q1
 hadoop fs -cat /products/prod1/Weather_WYJ.txt
 
+hadoop fs -copyFromLocal /home/hadoopuser/phase3/data/consumption_6.txt /project/dataset
+
 
 hadoop jar  /home/hadoopuser/midterm/jarQuestion2/HadoopProj.jar hdfs://192.168.56.5:9820/v2product.csv  hdfs://192.168.56.5:9820/manhphugiang/outputQuestion2
 
