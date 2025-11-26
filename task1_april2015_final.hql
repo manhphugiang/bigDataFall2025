@@ -16,7 +16,7 @@ CREATE EXTERNAL TABLE electricity_data (
 )
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '\t'
-LOCATION '/project/inputdata/dataset';
+LOCATION '/phase3-dataset';
 
 -- Analysis for April 2015
 -- Results will be stored in /user/hive-output/april2015

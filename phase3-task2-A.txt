@@ -1,0 +1,49 @@
+SET hive.exec.compress.output=false;
+
+DROP TABLE IF EXISTS electricity_data;
+CREATE EXTERNAL TABLE electricity_data (
+    house_date STRING,
+    log_id STRING,
+    house_id INT,
+    con_date STRING,
+    con_time STRING,
+    reading FLOAT,
+    flag INT
+)
+PARTITIONED BY (year STRING, month STRING, day STRING)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LOCATION '/phase3-dataset';
+
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='01') LOCATION '/phase3-dataset/2015/04/01';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='02') LOCATION '/phase3-dataset/2015/04/02';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='03') LOCATION '/phase3-dataset/2015/04/03';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='04') LOCATION '/phase3-dataset/2015/04/04';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='05') LOCATION '/phase3-dataset/2015/04/05';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='06') LOCATION '/phase3-dataset/2015/04/06';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='07') LOCATION '/phase3-dataset/2015/04/07';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='08') LOCATION '/phase3-dataset/2015/04/08';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='09') LOCATION '/phase3-dataset/2015/04/09';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='10') LOCATION '/phase3-dataset/2015/04/10';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='11') LOCATION '/phase3-dataset/2015/04/11';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='12') LOCATION '/phase3-dataset/2015/04/12';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='13') LOCATION '/phase3-dataset/2015/04/13';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='14') LOCATION '/phase3-dataset/2015/04/14';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='15') LOCATION '/phase3-dataset/2015/04/15';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='16') LOCATION '/phase3-dataset/2015/04/16';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='17') LOCATION '/phase3-dataset/2015/04/17';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='18') LOCATION '/phase3-dataset/2015/04/18';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='19') LOCATION '/phase3-dataset/2015/04/19';
+ALTER TABLE electricity_data ADD IF NOT EXISTS PARTITION (year='2015', month='04', day='20') LOCATION '/phase3-dataset/2015/04/20';
+
+INSERT OVERWRITE DIRECTORY '/user/hive-output/april2015'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+SELECT 
+    house_id, 
+    con_date, 
+    (MAX(reading) - MIN(reading)) AS daily_consumption
+FROM electricity_data
+WHERE year='2015' AND month='04'
+GROUP BY house_id, con_date
+ORDER BY house_id, con_date;
